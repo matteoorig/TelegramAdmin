@@ -34,9 +34,11 @@ public class main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //get latitudine longitudine
-                CCordinata cord = new CCordinata();
+
                 try {
+                    CCordinata cord;
                     cord = map.getPosition("Meda");
+                    System.out.println("Latitudine: "+ cord.getLat()+" Longitudine: "+ cord.getLon());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 } catch (ParserConfigurationException ex) {
@@ -45,7 +47,7 @@ public class main {
                     ex.printStackTrace();
                 }
 
-                System.out.println("Latitudine: "+ cord.getLat()+" Longitudine: "+ cord.getLon());
+
 
             }
         });
