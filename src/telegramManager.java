@@ -1,7 +1,8 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 class telegramManager extends Thread{
 
@@ -37,5 +38,58 @@ class telegramManager extends Thread{
 
             System.out.println(line);
         }
+
+
+        try (PrintWriter writer = new PrintWriter(new File("test.csv"))) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("id");
+            sb.append('\n');
+
+            writer.write(sb.toString());
+            writer.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+
+    public void writedata(String data){
+        try (PrintWriter writer = new PrintWriter(new File("data.csv"))) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("id");
+            sb.append('\n');
+
+            writer.write(sb.toString());
+            writer.close();
+            System.out.println("done!");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void readCSVFile(){
+        List<List<String>> records = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("test.csv"));) {
+            while (scanner.hasNextLine()) {
+                records.add(getRecordFromLine(scanner.nextLine()));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(records.toString());
+    }
+    private List<String> getRecordFromLine(String line) {
+        List<String> values = new ArrayList<String>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(",");
+            while (rowScanner.hasNext()) {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
     }
 }
