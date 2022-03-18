@@ -4,7 +4,13 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -116,5 +122,22 @@ class telegramManager extends Thread{
     }
 
 
+    public void sendMessage(long id, String mess) throws IOException, InterruptedException {
+        String urlString = formatUrl + "/sendMessage?chat_id=" + id + "&text=" + getEncodedString(mess);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        //ritorna ok se è stata effettuato l'invio
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+
+    public String getEncodedString(String toEncode) throws UnsupportedEncodingException {
+        return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.toString());
+    }
 
 }

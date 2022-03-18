@@ -1,7 +1,8 @@
 public class CCordinata {
     float lat = 0;
     float lon = 0;
-    
+    String image = "";
+
 
     public CCordinata(){}
 
