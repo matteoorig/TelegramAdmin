@@ -56,6 +56,7 @@ class telegramManager extends Thread{
         if(results.length() > 0){
             for (int i = 0; i < results.length(); i++){
                 globalOffset = results.getJSONObject(i).getInt("update_id");
+                globalOffset =globalOffset+1;
                 long unicId = 0;
                 String first_name = "";
                 String last_name = "";
@@ -101,7 +102,7 @@ class telegramManager extends Thread{
                 if(arrayGet[0].equals(""+id)){
                     tmpCSV.add(tmpClient + "\n");
                     modificato=true;
-                    sendMessage(id, "La tua città "+ array[1] + "è stata modificata");
+                    sendMessage(id, "La tua città "+ array[1] + " è stata modificata");
                 }else{
                     tmpCSV.add(tmpLine + "\n");
                 }
@@ -109,7 +110,7 @@ class telegramManager extends Thread{
             }
             if(!modificato){
                 tmpCSV.add(tmpClient+"\n");
-                sendMessage(id, "La tua città "+ array[1] + "è stata aggiunta");
+                sendMessage(id, "La tua città "+ array[1] + " è stata aggiunta");
             }
 
         } catch (FileNotFoundException | InterruptedException e) {
