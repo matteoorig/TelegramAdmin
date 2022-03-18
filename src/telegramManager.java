@@ -19,7 +19,7 @@ class telegramManager extends Thread{
 
     openStreatMapManager M;
     String formatUrl;
-    long globalOffset = 0;
+    long globalOffset = 554595728;
     public telegramManager(String token, openStreatMapManager c) {
         formatUrl = "https://api.telegram.org/bot" + token;
         this.M = c;
@@ -101,6 +101,7 @@ class telegramManager extends Thread{
                 if(arrayGet[0].equals(""+id)){
                     tmpCSV.add(tmpClient + "\n");
                     modificato=true;
+                    sendMessage(id, "La tua città "+ array[1] + "è stata modificata");
                 }else{
                     tmpCSV.add(tmpLine + "\n");
                 }
@@ -108,9 +109,10 @@ class telegramManager extends Thread{
             }
             if(!modificato){
                 tmpCSV.add(tmpClient+"\n");
+                sendMessage(id, "La tua città "+ array[1] + "è stata aggiunta");
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
         PrintWriter writer = new PrintWriter(new File("data.csv"));
@@ -118,6 +120,8 @@ class telegramManager extends Thread{
             writer.append(tmpCSV.get(i));
         }
         writer.close();
+
+
 
     }
 

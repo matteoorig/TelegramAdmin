@@ -14,17 +14,51 @@ public class grafica extends JFrame {
         setLayout(null);
 
         panel = new JPanel();
-        JLabel placeLabel = new JLabel("Benvenuto!");
-        placeLabel.setBounds(10,20,120,25);
-        add(placeLabel);
         man.start();
 
+
+        JLabel placeLabelBenvenuto = new JLabel("Benvenuto!");
+        placeLabelBenvenuto.setBounds(10,20,120,25);
+        add(placeLabelBenvenuto);
+
+        JLabel placeLabelins = new JLabel("INSERISCI UN EVENTO");
+        placeLabelins.setBounds(10,40,200,25);
+        add(placeLabelins);
+
+        JLabel placeLabecitta = new JLabel("Città evento: ");
+        placeLabecitta.setBounds(10,80,200,25);
+        add(placeLabecitta);
+
+        JTextField citta = new JTextField();
+        citta.setBounds(150, 80, 200, 25);
+        add(citta);
+        JLabel placeLaberaggio = new JLabel("Raggio di espansione evento: ");
+        placeLaberaggio.setBounds(10,110,200,25);
+        add(placeLaberaggio);
+
+        JTextField raggio = new JTextField();
+        raggio.setBounds(195, 110, 155, 25);
+        add(raggio);
+
+        JPanel line = new JPanel();
+        line.setBackground(Color.BLUE);
+        line.setBounds(10, 150, 335,3);
+        add(line);
+
+        JLabel placeLabelContenuti= new JLabel("Contenuto: ");
+        placeLabelContenuti.setBounds(10,165,200,25);
+        add(placeLabelContenuti);
+        JTextField contenuto = new JTextField();
+        contenuto.setBounds(150, 180, 200, 100);
+        add(contenuto);
+
+
         Button formGetUpdates = new Button();
-        formGetUpdates.setBounds(30, 100, 100, 50);
+        formGetUpdates.setBounds(30, 300, 100, 50);
         formGetUpdates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //getUpdates
+
 
             }
         });
@@ -37,7 +71,7 @@ public class grafica extends JFrame {
     public static void main(String[] args){
         grafica g = new grafica();
         g.setTitle("Telegram Admin");
-        g.setSize(600, 300);
+        g.setSize(600, 400);
         g.setVisible(true);
     }
 }
