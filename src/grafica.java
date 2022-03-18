@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 public class grafica extends JFrame {
 
@@ -48,7 +49,7 @@ public class grafica extends JFrame {
         JLabel placeLabelContenuti= new JLabel("Contenuto: ");
         placeLabelContenuti.setBounds(10,165,200,25);
         add(placeLabelContenuti);
-        JTextField contenuto = new JTextField();
+        JTextArea contenuto = new JTextArea();
         contenuto.setBounds(150, 180, 200, 100);
         add(contenuto);
 
@@ -59,7 +60,15 @@ public class grafica extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                //inserimento evento in db.csv
+                //invio this.evento quando clicco (utilizzo stesso metodo per mandarne uno o mandare tutti gli eventi presenti
+                //                                  ogni tot di tempo (inviatre quando si chiede /update))
 
+                try {
+                    man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText());
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         add(formGetUpdates);

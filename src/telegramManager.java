@@ -145,4 +145,18 @@ class telegramManager extends Thread{
         return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.toString());
     }
 
+
+    public boolean addEvent(String citta, int r, String text ) throws FileNotFoundException {
+        boolean tmp = false;
+
+
+        PrintWriter writer = new PrintWriter(new File("db.csv"));
+        writer.write(citta + "-" + r + "-" + text);
+        writer.close();
+
+
+
+        return tmp;
+    }
+
 }
