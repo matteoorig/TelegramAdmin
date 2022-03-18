@@ -53,8 +53,8 @@ public class grafica extends JFrame {
         add(contenuto);
 
 
-        Button formGetUpdates = new Button();
-        formGetUpdates.setBounds(30, 300, 100, 50);
+        Button formGetUpdates = new Button("AGGIUNGI");
+        formGetUpdates.setBounds(250, 280, 100, 35);
         formGetUpdates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
