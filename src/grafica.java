@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class grafica extends JFrame {
-    telegramManager man = new telegramManager("5220725554:AAE4s92QSGANF5cCjQ9CBB0FOacLYy8xS4Q");
+
+    openStreatMapManager c = new openStreatMapManager();
+    telegramManager man = new telegramManager("5220725554:AAE4s92QSGANF5cCjQ9CBB0FOacLYy8xS4Q", c);
 
     JPanel panel;
     public grafica(){

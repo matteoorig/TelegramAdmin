@@ -1,6 +1,8 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,10 +11,12 @@ import java.util.Scanner;
 
 class telegramManager extends Thread{
 
+    openStreatMapManager M;
     String formatUrl;
     long globalOffset = 0;
-    public telegramManager(String token) {
+    public telegramManager(String token, openStreatMapManager c) {
         formatUrl = "https://api.telegram.org/bot" + token;
+        this.M = c;
     }
 
     @Override
@@ -22,7 +26,7 @@ class telegramManager extends Thread{
 
             try {
                 getUpdates();
-            } catch (IOException e) {
+            } catch (IOException | ParserConfigurationException | SAXException e) {
                 e.printStackTrace();
             }
             try {
@@ -33,7 +37,7 @@ class telegramManager extends Thread{
         }
     }
 
-    public void getUpdates() throws IOException {
+    public void getUpdates() throws IOException, ParserConfigurationException, SAXException {
         String tmpUrl =  formatUrl + "/getUpdates?offset="+ globalOffset;
         URL url = new URL(tmpUrl);
         Scanner scan = new Scanner(url.openStream());
@@ -46,17 +50,21 @@ class telegramManager extends Thread{
         if(results.length() > 0){
             for (int i = 0; i < results.length(); i++){
                 globalOffset = results.getJSONObject(i).getInt("update_id");
-                long unicId = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getInt("id");
-                String first_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("first_name");
-                String last_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("last_name");
+                long unicId = 0;
+                String first_name = "";
+                String last_name = "";
+                String text = "";
 
-
-                String text = results.getJSONObject(i).getJSONObject("message").getString("text");
-                System.out.println(text+" "+ globalOffset);
+                if(results.getJSONObject(i).has("message")){
+                  unicId = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getInt("id");
+                  first_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("first_name");
+                  last_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("last_name");
+                  text = results.getJSONObject(i).getJSONObject("message").getString("text");
+                }
 
                 //parse text
                 if(text.contains("/citta")){
-                    //controllare se esiste tra gli utenti già inseriti
+                    //controllare se esiste tra gli utenti già inseriti, se esiste già modifico se no aggiungo
                     checkPresent(first_name, last_name, unicId, text);
                 }
             }
@@ -66,10 +74,17 @@ class telegramManager extends Thread{
 
     }
 
-    private void checkPresent(String nome, String cognome, long id, String pText) throws FileNotFoundException {
+    private void checkPresent(String nome, String cognome, long id, String pText) throws IOException, ParserConfigurationException, SAXException {
         List<String> tmpCSV = new ArrayList<>();
         String[] array = pText.split("\\s+");
-        String tmpClient = id + "-" + nome + "-" + cognome + "-"+ array[1];
+        if(array.length == 1 || id == 0){
+            return;
+        }
+        //darmi la posizione
+        CCordinata cordinata = M.getPosition(array[1]);
+        String tmpClient = id + "-" + nome + "-" + cognome + "-"+ array[1]+ "/" + cordinata.getLat() + "-" + cordinata.getLon();
+
+
 
         boolean modificato=false;
         try (Scanner scanner = new Scanner(new File("data.csv"));) {
@@ -101,40 +116,5 @@ class telegramManager extends Thread{
     }
 
 
-    public void writedata(String data){
-        try (PrintWriter writer = new PrintWriter(new File("data.csv"))) {
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("id");
-            sb.append('\n');
-
-            writer.write(sb.toString());
-            writer.close();
-            System.out.println("done!");
-
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-    public void readCSVFile(){
-        List<List<String>> records = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File("test.csv"));) {
-            while (scanner.hasNextLine()) {
-                records.add(getRecordFromLine(scanner.nextLine()));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println(records.toString());
-    }
-    private List<String> getRecordFromLine(String line) {
-        List<String> values = new ArrayList<String>();
-        try (Scanner rowScanner = new Scanner(line)) {
-            rowScanner.useDelimiter(",");
-            while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
-            }
-        }
-        return values;
-    }
 }
