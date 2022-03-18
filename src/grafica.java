@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class grafica extends JFrame {
     telegramManager man = new telegramManager("5220725554:AAE4s92QSGANF5cCjQ9CBB0FOacLYy8xS4Q");
@@ -20,23 +19,14 @@ public class grafica extends JFrame {
 
         Button formGetUpdates = new Button();
         formGetUpdates.setBounds(30, 100, 100, 50);
-        formGetUpdates.setBackground(Color.lightGray);
         formGetUpdates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //getUpdates
-                try {
-                    man.getUpdates();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+
             }
         });
         add(formGetUpdates);
-
-        panel.setBounds(0, 0, 600, 75);
-        panel.setBackground(Color.CYAN);
-        add(panel);
 
     }
 

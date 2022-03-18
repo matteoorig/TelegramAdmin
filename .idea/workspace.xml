@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac2da933-bec3-459b-944b-a3a2eea6849d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/grafica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/grafica.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/telegramManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/telegramManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/grafica$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/grafica$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/grafica.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/grafica.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/telegramManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/telegramManager.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,6 +27,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="264Jg4zskfdQoltisXaPfxINV7C" />
   <component name="ProjectLevelVcsManager">

@@ -10,6 +10,7 @@ import java.util.Scanner;
 class telegramManager extends Thread{
 
     String formatUrl;
+    long globalOffset = 0;
     public telegramManager(String token) {
         formatUrl = "https://api.telegram.org/bot" + token;
     }
@@ -19,7 +20,11 @@ class telegramManager extends Thread{
         while(true){
 
 
-
+            try {
+                getUpdates();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -29,41 +34,69 @@ class telegramManager extends Thread{
     }
 
     public void getUpdates() throws IOException {
-        String tmpUrl =  formatUrl + "/getUpdates";
+        String tmpUrl =  formatUrl + "/getUpdates?offset="+ globalOffset;
         URL url = new URL(tmpUrl);
         Scanner scan = new Scanner(url.openStream());
         scan.useDelimiter("\u001a");
 
         String jsonString = scan.next();
         JSONObject jsonObject = new JSONObject(jsonString);//prendo file completo formattato
-
         JSONArray results = jsonObject.getJSONArray("result");
+
         if(results.length() > 0){
             for (int i = 0; i < results.length(); i++){
-                //int update_id = jsonObject.getJSONArray("result").getJSONObject(i).getInt("update_id");
-
+                globalOffset = results.getJSONObject(i).getInt("update_id");
                 long unicId = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getInt("id");
                 String first_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("first_name");
                 String last_name = results.getJSONObject(i).getJSONObject("message").getJSONObject("chat").getString("last_name");
 
 
-                if(results.getJSONObject(i).getJSONObject("message").getString("text").equals("/"))
-                try (PrintWriter writer = new PrintWriter(new File("data.csv"))) {
+                String text = results.getJSONObject(i).getJSONObject("message").getString("text");
+                System.out.println(text+" "+ globalOffset);
 
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(unicId+"-"+first_name+"-"+last_name);
-                    sb.append('\n');
-
-                    writer.write(sb.toString());
-                    writer.close();
-
-                } catch (FileNotFoundException e) {
-                    System.out.println(e.getMessage());
+                //parse text
+                if(text.contains("/citta")){
+                    //controllare se esiste tra gli utenti già inseriti
+                    checkPresent(first_name, last_name, unicId, text);
                 }
             }
         }
 
 
+
+    }
+
+    private void checkPresent(String nome, String cognome, long id, String pText) throws FileNotFoundException {
+        List<String> tmpCSV = new ArrayList<>();
+        String[] array = pText.split("\\s+");
+        String tmpClient = id + "-" + nome + "-" + cognome + "-"+ array[1];
+
+        boolean modificato=false;
+        try (Scanner scanner = new Scanner(new File("data.csv"));) {
+            while (scanner.hasNextLine()) {
+
+                String tmpLine = scanner.nextLine();
+                String arrayGet[] = tmpLine.split("-");
+                if(arrayGet[0].equals(""+id)){
+                    tmpCSV.add(tmpClient + "\n");
+                    modificato=true;
+                }else{
+                    tmpCSV.add(tmpLine + "\n");
+                }
+
+            }
+            if(!modificato){
+                tmpCSV.add(tmpClient+"\n");
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        PrintWriter writer = new PrintWriter(new File("data.csv"));
+        for (int i = 0; i < tmpCSV.size(); i++){
+            writer.append(tmpCSV.get(i));
+        }
+        writer.close();
 
     }
 
