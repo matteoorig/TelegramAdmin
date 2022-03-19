@@ -5,16 +5,22 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class grafica extends JFrame {
 
+    String token = getToken();
     openStreatMapManager c = new openStreatMapManager();
-    telegramManager man = new telegramManager("5220725554:AAE4s92QSGANF5cCjQ9CBB0FOacLYy8xS4Q", c);
+
 
     JPanel panel;
     public grafica(){
+        telegramManager man = new telegramManager(token, c);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
@@ -92,6 +98,35 @@ public class grafica extends JFrame {
 
     }
 
+    public List<String> getConfig(){
+        List<String> conf = new ArrayList<>();
+
+        try (Scanner scanner = new Scanner(new File("conf.csv"));) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine()+ "\n";
+                conf.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return conf;
+    }
+
+    public String getToken(){
+        String tmp = "";
+
+        List<String> config = getConfig();
+        if(config.size() < 1){
+            System.exit(0);
+        }
+        String[] array = config.get(0).split("=");
+        if(array[0].equals("token")){
+            tmp = array[1].replaceAll("\n", "");
+        }
+
+        return tmp;
+    }
 
     
     public static void main(String[] args){

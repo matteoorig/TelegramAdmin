@@ -249,9 +249,9 @@ class telegramManager extends Thread{
 
 
     public void stampLog(String cl) throws FileNotFoundException {
-        List<String> tmpConf = getDataCsv("conf.csv");
+        List<String> tmpConf = getDataCsv("log.csv");
 
-        PrintWriter writer = new PrintWriter(new File("conf.csv"));
+        PrintWriter writer = new PrintWriter(new File("log.csv"));
         for(int i = 0; i<tmpConf.size(); i++){
             writer.append(tmpConf.get(i));
         }
