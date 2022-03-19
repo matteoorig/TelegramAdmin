@@ -68,18 +68,9 @@ public class grafica extends JFrame {
         formGetUpdates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                //inserimento evento in db.csv
-                //invio this.evento quando clicco (utilizzo stesso metodo per mandarne uno o mandare tutti gli eventi presenti
-                //                                  ogni tot di tempo (inviatre quando si chiede /update))
-
-
-                //c.distance(45.662506103515625, 9.156753540039062, 45.597694396972656, 9.018061637878418);
-
-
                 try {
                     man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText());
-                    System.out.println("[SERVER] Evento aggiunto per"+ citta.getText()+".");
+                    System.out.println("[SERVER] Evento aggiunto a "+ citta.getText()+" | "+ raggio.getText()+ "Km |");
 
 
                 } catch (FileNotFoundException ex) {

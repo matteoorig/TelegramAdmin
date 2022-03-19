@@ -32,7 +32,7 @@ class telegramManager extends Thread{
 
             try {
                 getUpdates();
-            } catch (IOException | ParserConfigurationException | SAXException e) {
+            } catch (IOException | ParserConfigurationException | SAXException | InterruptedException e) {
                 e.printStackTrace();
             }
             try {
@@ -43,7 +43,7 @@ class telegramManager extends Thread{
         }
     }
 
-    public void getUpdates() throws IOException, ParserConfigurationException, SAXException {
+    public void getUpdates() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
         String tmpUrl =  formatUrl + "/getUpdates?offset="+ globalOffset;
         URL url = new URL(tmpUrl);
         Scanner scan = new Scanner(url.openStream());
@@ -73,6 +73,10 @@ class telegramManager extends Thread{
                 if(text.contains("/citta")){
                     //controllare se esiste tra gli utenti già inseriti, se esiste già modifico se no aggiungo
                     checkPresent(first_name, last_name, unicId, text);
+                }
+
+                if(text.contains("/update")){
+                    sendEvents(getDataCsv("db.csv"));
                 }
             }
         }
@@ -132,31 +136,19 @@ class telegramManager extends Thread{
         writer.append(citta + "-" + r + "-" + text);
         writer.close();
 
+
+        /*
+            ATTENZIONE
+
+            L'ultimo evento inserito non viene conteggiato
+            come evento dal metodo - sendEvents() - perchè
+            non fa in tempo a scrivere prima della lettura
+            successiva.
+         */
+
+
         sendEvents(tmpCSV);
     }
-
-
-    public void sendMessage(long id, String mess) throws IOException, InterruptedException {
-        String urlString = formatUrl + "/sendMessage?chat_id=" + id + "&text=" + getEncodedString(mess);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-
-        //ritorna ok se è stata effettuato l'invio
-        HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    public String getEncodedString(String toEncode) throws UnsupportedEncodingException {
-        return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.toString());
-    }
-
-
-
-
-
 
     public void sendEvents(List<String> db ) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 
@@ -186,7 +178,7 @@ class telegramManager extends Thread{
             CCordinata cittaEv = M.getPosition(citta);
 
             //for(per ogni user in data.csv)
-            List<String> users = getDataCsv("dat.csv");
+            List<String> users = getDataCsv("data.csv");
             for (int i = 0; i < users.size(); i++){
 
                 //  prendo lat2 | long2 | ID
@@ -194,6 +186,8 @@ class telegramManager extends Thread{
 
                 String[] arrayUser1 = arrayUser[0].split("-");
                 long idUser = Long.parseLong(arrayUser1[0]);
+                String nomeUser = arrayUser1[1];
+                String cognomeUser = arrayUser1[2];
 
                 String[] arrayUser2 = arrayUser[1].split("-");
                 double lat = Double.parseDouble(arrayUser2[0]);
@@ -202,20 +196,21 @@ class telegramManager extends Thread{
                 //  DISTANZA = ottengo la distanza in km tra lat1 | long1 e lat2 | long2
                 int distance = M.distance(cittaEv.getLat(), cittaEv.getLon(), lat, lon);
 
+                String header = "Ciao " + nomeUser + " " + cognomeUser;
+                String format = "Distante "+ distance+"Km da te!";
                 //  se DISTANZA <= RAGGIO
                 //    invio a ID il testo
                 if(distance <= raggio){
+                    sendMessage(idUser,header);
                     sendMessage(idUser, testo);
+                    sendMessage(idUser, format);
+                    System.out.println("[SERVER Notifica] | id: "+ idUser+" | nome: "+nomeUser+" | cognome: "+ cognomeUser+" | distante "+ distance+"Km da "+ citta);
                 }
 
 
             }
 
         }
-
-
-
-
     }
 
     public List<String> getDataCsv(String path){
@@ -233,12 +228,24 @@ class telegramManager extends Thread{
     }
 
 
+    public void sendMessage(long id, String mess) throws IOException, InterruptedException {
+        String urlString = formatUrl + "/sendMessage?chat_id=" + id + "&text=" + getEncodedString(mess);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        //ritorna ok se è stata effettuato l'invio
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public String getEncodedString(String toEncode) throws UnsupportedEncodingException {
+        return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.toString());
+    }
 
 
-
-
-
-
-
+    
 
 }
