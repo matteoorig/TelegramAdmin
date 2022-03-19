@@ -1,23 +1,23 @@
 public class CCordinata {
-    float lat = 0;
-    float lon = 0;
+    double lat = 0;
+    double lon = 0;
     String image = "";
 
 
     public CCordinata(){}
 
-    public void setLat(float l){
+    public void setLat(double l){
         this.lat = l;
     }
-    public void setLon(float l){
+    public void setLon(double l){
         this.lon = l;
     }
 
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public float getLon() {
+    public double getLon() {
         return lon;
     }
 }

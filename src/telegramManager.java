@@ -92,7 +92,6 @@ class telegramManager extends Thread{
         String tmpClient = id + "-" + nome + "-" + cognome + "-"+ array[1]+ "/" + cordinata.getLat() + "-" + cordinata.getLon();
 
 
-
         boolean modificato=false;
         try (Scanner scanner = new Scanner(new File("data.csv"));) {
             while (scanner.hasNextLine()) {
@@ -121,9 +120,19 @@ class telegramManager extends Thread{
             writer.append(tmpCSV.get(i));
         }
         writer.close();
+    }
 
+    public void addEvent(String citta, int r, String text ) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+        List<String> tmpCSV = getDataCsv("db.csv");
 
+        PrintWriter writer = new PrintWriter(new File("db.csv"));
+        for(int i = 0; i<tmpCSV.size(); i++){
+            writer.append(tmpCSV.get(i));
+        }
+        writer.append(citta + "-" + r + "-" + text);
+        writer.close();
 
+        sendEvents(tmpCSV);
     }
 
 
@@ -140,17 +149,79 @@ class telegramManager extends Thread{
                 .send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-
     public String getEncodedString(String toEncode) throws UnsupportedEncodingException {
         return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.toString());
     }
 
 
-    public boolean addEvent(String citta, int r, String text ) throws FileNotFoundException {
-        boolean tmp = false;
+
+
+
+
+    public void sendEvents(List<String> db ) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+
+        //posizione evento e raggio e testo
+        //CCordinata => mi faccio dare lat1 | long1
+        //RAGGIO = raggio dell'evento                                       es. 4km
+        //for(per ogni user in data.csv)
+        //  prendo lat2 | long2 | ID
+        //  DISTANZA = ottengo la distanza in km tra lat1 | long1 e lat2 | long2       es. 12Km
+        //  se DISTANZA <= RAGGIO
+        //    (evento vicino a te!)
+        //    invio a ID il testo
+
+        //--------------------------------//
+
+        //per ogni evento presente nel db
+        for(int I = 0; I< db.size(); I++){
+
+            //posizione evento e raggio e testo
+            String[] arrayTmp = db.get(I).split("-");               //Mariano-7-ciao!
+
+            String citta = arrayTmp[0];
+            int raggio = Integer.parseInt(arrayTmp[1]);
+            String testo = arrayTmp[2];
+
+            //CCordinata => mi faccio dare lat1 | long1
+            CCordinata cittaEv = M.getPosition(citta);
+
+            //for(per ogni user in data.csv)
+            List<String> users = getDataCsv("dat.csv");
+            for (int i = 0; i < users.size(); i++){
+
+                //  prendo lat2 | long2 | ID
+                String[] arrayUser = users.get(i).split("/");       //387630778-Matteo-Origgi-Saronno/45.625675201416016-9.037328720092773
+
+                String[] arrayUser1 = arrayUser[0].split("-");
+                long idUser = Long.parseLong(arrayUser1[0]);
+
+                String[] arrayUser2 = arrayUser[1].split("-");
+                double lat = Double.parseDouble(arrayUser2[0]);
+                double lon = Double.parseDouble(arrayUser2[1]);
+
+                //  DISTANZA = ottengo la distanza in km tra lat1 | long1 e lat2 | long2
+                int distance = M.distance(cittaEv.getLat(), cittaEv.getLon(), lat, lon);
+
+                //  se DISTANZA <= RAGGIO
+                //    invio a ID il testo
+                if(distance <= raggio){
+                    sendMessage(idUser, testo);
+                }
+
+
+            }
+
+        }
+
+
+
+
+    }
+
+    public List<String> getDataCsv(String path){
         List<String> tmpCSV = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(new File("db.csv"));) {
+        try (Scanner scanner = new Scanner(new File(path));) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine()+ "\n";
                 tmpCSV.add(line);
@@ -158,17 +229,15 @@ class telegramManager extends Thread{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        PrintWriter writer = new PrintWriter(new File("db.csv"));
-        for(int i = 0; i<tmpCSV.size(); i++){
-            writer.append(tmpCSV.get(i));
-        }
-        writer.append(citta + "-" + r + "-" + text);
-        tmp = true;
-        writer.close();
-
-        return tmp;
+        return tmpCSV;
     }
+
+
+
+
+
+
+
 
 
 

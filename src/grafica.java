@@ -1,8 +1,12 @@
+import org.xml.sax.SAXException;
+
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class grafica extends JFrame {
 
@@ -69,13 +73,25 @@ public class grafica extends JFrame {
                 //invio this.evento quando clicco (utilizzo stesso metodo per mandarne uno o mandare tutti gli eventi presenti
                 //                                  ogni tot di tempo (inviatre quando si chiede /update))
 
+
+                //c.distance(45.662506103515625, 9.156753540039062, 45.597694396972656, 9.018061637878418);
+
+
                 try {
-                    if(man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText())){
-                        System.out.println("[SERVER] Evento aggiunto per"+ citta.getText()+".");
-                    }
+                    man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText());
+                    System.out.println("[SERVER] Evento aggiunto per"+ citta.getText()+".");
+
 
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } catch (ParserConfigurationException parserConfigurationException) {
+                    parserConfigurationException.printStackTrace();
+                } catch (SAXException saxException) {
+                    saxException.printStackTrace();
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
                 }
             }
         });
