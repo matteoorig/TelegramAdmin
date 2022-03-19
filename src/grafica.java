@@ -50,12 +50,17 @@ public class grafica extends JFrame {
         placeLabelContenuti.setBounds(10,165,200,25);
         add(placeLabelContenuti);
         JTextArea contenuto = new JTextArea();
-        contenuto.setBounds(150, 180, 200, 100);
+        contenuto.setBounds(150, 180, 195, 100);
         add(contenuto);
+
+        JPanel line2 = new JPanel();
+        line2.setBackground(Color.BLUE);
+        line2.setBounds(10, 290, 335,3);
+        add(line2);
 
 
         Button formGetUpdates = new Button("AGGIUNGI");
-        formGetUpdates.setBounds(250, 280, 100, 35);
+        formGetUpdates.setBounds(250, 300, 100, 35);
         formGetUpdates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,7 +70,10 @@ public class grafica extends JFrame {
                 //                                  ogni tot di tempo (inviatre quando si chiede /update))
 
                 try {
-                    man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText());
+                    if(man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText())){
+                        System.out.println("[SERVER] Evento aggiunto per"+ citta.getText()+".");
+                    }
+
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 }

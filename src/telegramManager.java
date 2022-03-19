@@ -148,15 +148,28 @@ class telegramManager extends Thread{
 
     public boolean addEvent(String citta, int r, String text ) throws FileNotFoundException {
         boolean tmp = false;
+        List<String> tmpCSV = new ArrayList<>();
 
+        try (Scanner scanner = new Scanner(new File("db.csv"));) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine()+ "\n";
+                tmpCSV.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         PrintWriter writer = new PrintWriter(new File("db.csv"));
-        writer.write(citta + "-" + r + "-" + text);
+        for(int i = 0; i<tmpCSV.size(); i++){
+            writer.append(tmpCSV.get(i));
+        }
+        writer.append(citta + "-" + r + "-" + text);
+        tmp = true;
         writer.close();
-
-
 
         return tmp;
     }
+
+
 
 }
