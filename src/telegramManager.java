@@ -204,7 +204,9 @@ class telegramManager extends Thread{
                     sendMessage(idUser,header);
                     sendMessage(idUser, testo);
                     sendMessage(idUser, format);
-                    System.out.println("[SERVER Notifica] | id: "+ idUser+" | nome: "+nomeUser+" | cognome: "+ cognomeUser+" | distante "+ distance+"Km da "+ citta);
+                    String conf = "[SERVER Notifica] | id: "+ idUser+" | nome: "+nomeUser+" | cognome: "+ cognomeUser+" | distante "+ distance+"Km da "+ citta;
+                    stampLog(conf);
+                    System.out.println(conf);
                 }
 
 
@@ -246,6 +248,15 @@ class telegramManager extends Thread{
     }
 
 
-    
+    public void stampLog(String cl) throws FileNotFoundException {
+        List<String> tmpConf = getDataCsv("conf.csv");
+
+        PrintWriter writer = new PrintWriter(new File("conf.csv"));
+        for(int i = 0; i<tmpConf.size(); i++){
+            writer.append(tmpConf.get(i));
+        }
+        writer.append(cl);
+        writer.close();
+    }
 
 }

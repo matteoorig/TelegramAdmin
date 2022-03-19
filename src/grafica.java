@@ -70,7 +70,9 @@ public class grafica extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     man.addEvent(citta.getText(), Integer.parseInt(raggio.getText()), contenuto.getText());
-                    System.out.println("[SERVER] Evento aggiunto a "+ citta.getText()+" | "+ raggio.getText()+ "Km |");
+                    String conf = "[SERVER] Evento aggiunto a "+ citta.getText()+" | "+ raggio.getText()+ "Km |";
+                    man.stampLog(conf);
+                    System.out.println(conf);
 
 
                 } catch (FileNotFoundException ex) {

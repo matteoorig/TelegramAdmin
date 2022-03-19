@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac2da933-bec3-459b-944b-a3a2eea6849d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.csv" beforeDir="false" afterPath="$PROJECT_DIR$/db.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/conf.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/grafica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/grafica.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/telegramManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/telegramManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/grafica$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/grafica$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/grafica.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/grafica.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp/production/telegram_admin/telegramManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/temp/production/telegram_admin/telegramManager.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
